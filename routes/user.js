@@ -1,0 +1,87 @@
+const express = require("express");
+const router = express.Router();
+const bcrypt = require("bcrypt");
+const db = require("../models");
+const User = db.User;
+const jwt = require("jsonwebtoken");
+require("dotenv/config");
+
+router.get("/all", async (req, res) => {
+  try {
+    let response = await User.findAll();
+    return res.status(201).json({ message: "All users here!", data: response });
+  } catch (error) {
+    return res.json({ message: "Cannot get all users!" });
+  }
+});
+
+router.post("/register", async (req, res) => {
+  try {
+    const user = await User.create({
+      username: req.body.username,
+      password: bcrypt.hashSync(req.body.password, 10),
+    });
+    user.password = undefined;
+    user.createdAt = undefined;
+    user.updatedAt = undefined;
+    let token = jwt.sign(
+      { id: user.id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+    return res
+      .status(201)
+      .json({ message: "User successfully registered!", user, token });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(400)
+      .json({ message: "Something went wrong with registration!", error });
+  }
+});
+
+router.post("/login", async (req, res) => {
+  try {
+    const user = await User.findOne({ where: { username: req.body.username } });
+    if (!user) {
+      return res.status(400).json({ message: "Wrong username!" });
+    }
+    if (!bcrypt.compareSync(req.body.password, user.password)) {
+      return res.status(400).json({ message: "Wrong password!" });
+    }
+    user.password = undefined;
+    user.createdAt = undefined;
+    user.updatedAt = undefined;
+    let token = jwt.sign(
+      {
+        id: user.id,
+        username: user.username,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+
+    return res.json({
+      jwt: token,
+      message: "Logged in successfully!",
+      user,
+    });
+  } catch (error) {
+    return res.status(400).json({ message: "Something went wrong!" });
+  }
+});
+
+router.delete("/delete", async (req, res) => {
+  try {
+    const user = await User.findOne({ where: { username: req.body.username } });
+    if (!user) {
+      return res.status(400).json({ message: "Wrong username!" });
+    }
+    await User.destroy({ where: { username: req.body.username } });
+    return res.status(200).json({ message: "User successfully deleted!" });
+  } catch (error) {
+    return res.status(400).json({ message: "Something went wrong!" });
+  }
+});
+
+module.exports = router;
