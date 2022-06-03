@@ -20,8 +20,6 @@ router.post("/create", async (req, res) => {
   try {
     let date = new Date(req.body.date);
     let dayId = date.getDay();
-    let startHour;
-    let endHour;
     // Check if date is in the past
     let diff = new Date().getTime() - date.getTime();
     if (diff > 0) {
@@ -37,6 +35,10 @@ router.post("/create", async (req, res) => {
     if (!reservationType) {
       return res.status(500).json({ message: "No reservation of this type!" });
     }
+    // Duration on reservation converting to minutes
+    let durationInMinutes =
+      parseInt(reservationType.duration) * 60 +
+      parseInt(reservationType.duration[3] + reservationType.duration[4]);
 
     // This if changes the value for saturday from 0 to 7 in order to match the database seeders
     if (dayId === 0) {
@@ -87,19 +89,41 @@ router.post("/create", async (req, res) => {
 
     if (
       orderingTimeInMinutes < startTimeInMinutes ||
-      orderingTimeInMinutes >= endTimeInMinutes
+      orderingTimeInMinutes + durationInMinutes > endTimeInMinutes
     )
       return res
         .status(500)
-        .json({ message: "You are making order in non working hours!" });
+        .json({ message: "Your order are going out of  working hours!" });
 
     //-----------------------------------
 
     // Checking da l' ce poklapa vrijeme sa nekom prethodnom rezervacijom hahahaah
 
+    let thisDay =
+      date.getFullYear() +
+      "-" +
+      (date.getMonth() + 1 < 10
+        ? "0" + eval(date.getMonth() + 1)
+        : date.getMonth() + 1) +
+      "-" +
+      (date.getDate() < 10 ? "0" + eval(date.getDate()) : date.getDate());
+
+    let allReservationOnThatDay = await Reservation.findAll({
+      where: { date: thisDay },
+    });
+    console.log(allReservationOnThatDay);
+
     //-----------------------------------
 
-    return res.json({ message: "radiiii" });
+    // await Reservation.create({
+    //   name: req.body.name,
+    //   date: req.body.date,
+    //   type_id: req.body.type_id,
+    //   phone_number: req.body.phone_number,
+    //   message: req.body.message,
+    // });
+
+    return res.json({ message: "Reservation created successfully!" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Something went wrong!", error });
