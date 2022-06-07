@@ -1,4 +1,24 @@
 {
+  "name": "scheduler_app",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "sequelize-cli db:migrate",
+    "seed": "sequelize-cli db:seed:all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Panzo98/scheduler_app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Panzo98/scheduler_app/issues"
+  },
+  "homepage": "https://github.com/Panzo98/scheduler_app#readme",
+  "description": "",
   "dependencies": {
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
@@ -6,6 +26,10 @@
     "express": "^4.18.1",
     "jsonwebtoken": "^8.5.1",
     "mariadb": "^3.0.0",
+    "mysql2": "^2.3.3",
     "sequelize": "^6.20.1"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.4.1"
   }
 }
