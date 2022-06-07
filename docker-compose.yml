@@ -7,7 +7,7 @@ services:
     depends_on:
       - mysql-db
   mysql-db:
-    image: mysql:8
+    image: mysql:5.7
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=true
       - MYSQL_DATABASE=${SQL_DATABASE}
