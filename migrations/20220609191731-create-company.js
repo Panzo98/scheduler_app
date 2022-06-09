@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Reservations", {
+    await queryInterface.createTable("Companies", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,32 +10,20 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
-      },
-      date: {
-        type: Sequelize.DATE,
         allowNull: false,
       },
-      type_id: {
+      address: {
+        type: Sequelize.STRING,
+      },
+      user_id: {
         type: Sequelize.INTEGER,
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
         allowNull: false,
         references: {
-          model: "Reservation_Types",
+          model: "Users",
           key: "id",
         },
-      },
-      phone_number: {
-        type: Sequelize.STRING,
-      },
-      message: {
-        type: Sequelize.STRING,
-      },
-      status: {
-        type: Sequelize.STRING,
-      },
-      admin_note: {
-        type: Sequelize.STRING,
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       createdAt: {
         allowNull: false,
@@ -48,6 +36,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Reservations");
+    await queryInterface.dropTable("Companies");
   },
 };

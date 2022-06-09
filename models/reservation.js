@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       Reservation.belongsTo(models.Reservation_Type, {
         foreignKey: "type_id",
       });
+      Reservation.belongsTo(models.Object, {
+        foreignKey: "object_id",
+      });
     }
   }
   Reservation.init(
@@ -21,7 +24,9 @@ module.exports = (sequelize, DataTypes) => {
       type_id: { type: DataTypes.INTEGER, allowNull: false },
       phone_number: DataTypes.STRING,
       message: DataTypes.STRING,
+      status: DataTypes.STRING,
       admin_note: DataTypes.STRING,
+      object_id: { type: DataTypes.INTEGER, allowNull: false },
     },
     {
       sequelize,
