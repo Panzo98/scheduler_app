@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: { type: DataTypes.STRING, allowNull: false },
       duration: { type: DataTypes.TIME, allowNull: false },
+      color: { type: DataTypes.STRING, allowNull: false },
       object_id: { type: DataTypes.INTEGER, allowNull: false },
     },
     {

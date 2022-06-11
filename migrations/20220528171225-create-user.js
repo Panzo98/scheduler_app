@@ -17,6 +17,13 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      avatar_url: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

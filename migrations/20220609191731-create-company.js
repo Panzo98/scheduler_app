@@ -15,16 +15,6 @@ module.exports = {
       address: {
         type: Sequelize.STRING,
       },
-      user_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Users",
-          key: "id",
-        },
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
