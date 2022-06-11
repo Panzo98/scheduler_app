@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       Working_Hour.belongsTo(models.Day, {
         foreignKey: "day_id",
       });
+      Working_Hour.belongsTo(models.Object, {
+        foreignKey: "object_id",
+      });
     }
   }
   Working_Hour.init(
@@ -19,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       day_id: { type: DataTypes.INTEGER, allowNull: false, unique: true },
       start: { type: DataTypes.TIME, allowNull: false },
       end: { type: DataTypes.TIME, allowNull: false },
+      object_id: { type: DataTypes.INTEGER, allowNull: false },
     },
     {
       sequelize,

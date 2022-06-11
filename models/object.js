@@ -18,6 +18,9 @@ module.exports = (sequelize, DataTypes) => {
       Object.hasMany(models.Reservation_Type, {
         foreignKey: "object_id",
       });
+      Object.hasMany(models.Working_Hour, {
+        foreignKey: "object_id",
+      });
     }
   }
   Object.init(
