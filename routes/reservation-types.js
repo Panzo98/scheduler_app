@@ -18,6 +18,8 @@ router.post("/create", verify, async (req, res) => {
     await Reservation_Type.create({
       name: req.body.name,
       duration: req.body.duration,
+      color: req.body.color,
+      object_id: req.body.object_id,
     });
     return res.json({ message: "New reservation type created!" });
   } catch (error) {
@@ -56,6 +58,8 @@ router.put("/:id", verify, async (req, res) => {
       {
         name: req.body.name,
         duration: req.body.duration,
+        color: req.body.color,
+        object_id: req.body.object_id,
       },
       { where: { id: req.params.id } }
     );
