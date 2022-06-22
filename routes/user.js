@@ -21,12 +21,20 @@ router.post("/register", async (req, res) => {
       username: req.body.username,
       password: bcrypt.hashSync(req.body.password, 10),
       email: req.body.email,
+      role_id: req.body.role_id,
+      company_id: req.body.company_id,
     });
     user.password = undefined;
     user.createdAt = undefined;
     user.updatedAt = undefined;
     let token = jwt.sign(
-      { id: user.id, username: user.username, email: user.email },
+      {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role_id: user.role_id,
+        company_id: user.company_id,
+      },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
@@ -57,6 +65,9 @@ router.post("/login", async (req, res) => {
       {
         id: user.id,
         username: user.username,
+        email: user.email,
+        role_id: user.role_id,
+        company_id: user.company_id,
       },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
