@@ -121,6 +121,9 @@ router.post("/create", async (req, res) => {
     //   type_id: req.body.type_id,
     //   phone_number: req.body.phone_number,
     //   message: req.body.message,
+    //   status: "accepted",
+    //   admin_note: req.body.admin_note,
+    //   object_id: req.body.object_id,
     // });
 
     return res.json({ message: "Reservation created successfully!" });

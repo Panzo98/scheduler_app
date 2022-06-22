@@ -12,6 +12,7 @@ const reservationTypeRouter = require("./routes/reservation-types");
 const nonWorkingDaysRouter = require("./routes/non-working-day");
 const workingHoursRouter = require("./routes/working-hours");
 const companyRouter = require("./routes/companies");
+const objectRouter = require("./routes/objects");
 
 app.use("/api/reservation", reservationRouter);
 app.use("/api/user", userRouter);
@@ -19,6 +20,7 @@ app.use("/api/reservation_type", reservationTypeRouter);
 app.use("/api/non_working_days", nonWorkingDaysRouter);
 app.use("/api/working_hours", workingHoursRouter);
 app.use("/api/companies", companyRouter);
+app.use("/api/objects", objectRouter);
 
 app.listen(process.env.PORT, () =>
   console.log(`Server running on port ${process.env.PORT}!`)
