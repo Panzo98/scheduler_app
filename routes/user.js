@@ -72,13 +72,13 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.delete("/delete", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
-    const user = await User.findOne({ where: { username: req.body.username } });
+    const user = await User.findOne({ where: { username: req.params.id } });
     if (!user) {
-      return res.status(400).json({ message: "Wrong username!" });
+      return res.status(400).json({ message: "Wrong id!" });
     }
-    await User.destroy({ where: { username: req.body.username } });
+    await User.destroy({ where: { username: req.params.id } });
     return res.status(200).json({ message: "User successfully deleted!" });
   } catch (error) {
     return res.status(400).json({ message: "Something went wrong!" });
