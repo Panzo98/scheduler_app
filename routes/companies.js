@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../models");
-const Working_Hour = db.Working_Hour;
+const Company = db.Company;
 
 router.get("/all", async (req, res) => {
   try {
-    let response = await Working_Hour.findAll();
-    return res.json({ message: "All working hours!", data: response });
+    let response = await Company.findAll();
+    return res.json({ message: "All companies!", data: response });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong!" });
   }
@@ -14,12 +14,11 @@ router.get("/all", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   try {
-    await Working_Hour.create({
-      day_id: req.body.day_id,
-      start: req.body.start,
-      end: req.body.end,
+    await Company.create({
+      name: req.body.name,
+      address: req.body.address,
     });
-    return res.json({ message: "Successfully added working hour!" });
+    return res.json({ message: "Successfully added company!" });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong!" });
   }
@@ -27,16 +26,14 @@ router.post("/create", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    const workingHour = await Working_Hour.findOne({
+    const workingHour = await Company.findOne({
       where: { id: req.params.id },
     });
     if (!workingHour) {
       return res.status(400).json({ message: "Wrong id!" });
     }
-    await Working_Hour.destroy({ where: { id: req.params.id } });
-    return res
-      .status(200)
-      .json({ message: "Working hour successfully deleted!" });
+    await Company.destroy({ where: { id: req.params.id } });
+    return res.status(200).json({ message: "Company successfully deleted!" });
   } catch (error) {
     return res.status(400).json({ message: "Something went wrong!" });
   }
@@ -44,7 +41,7 @@ router.delete("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   try {
-    let validId = await Working_Hour.findOne({
+    let validId = await Company.findOne({
       where: { id: req.params.id },
     });
     if (!validId)
@@ -52,14 +49,14 @@ router.put("/:id", async (req, res) => {
         .status(404)
         .json({ message: "There's no record with that id!" });
 
-    await Working_Hour.update(
+    await Company.update(
       {
-        start: req.body.start,
-        end: req.body.end,
+        name: req.body.name,
+        address: req.body.address,
       },
       { where: { id: req.params.id } }
     );
-    return res.json({ message: "Working hour successfully updated!" });
+    return res.json({ message: "Company successfully updated!" });
   } catch (error) {
     return res.status(400).json(error);
   }

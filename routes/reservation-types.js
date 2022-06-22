@@ -25,27 +25,27 @@ router.post("/create", verify, async (req, res) => {
   }
 });
 
-router.delete("/delete", verify, async (req, res) => {
+router.delete("/:id", verify, async (req, res) => {
   try {
     let validId = await Reservation_Type.findOne({
-      where: { id: req.body.id },
+      where: { id: req.params.id },
     });
     if (!validId)
       return res
         .status(404)
         .json({ message: "There's no record with that id!" });
 
-    await Reservation_Type.destroy({ where: { id: req.body.id } });
+    await Reservation_Type.destroy({ where: { id: req.params.id } });
     return res.json({ message: "Reservation type successfully deleted!" });
   } catch (error) {
     return res.status(400).json(error);
   }
 });
 
-router.put("/update", verify, async (req, res) => {
+router.put("/:id", verify, async (req, res) => {
   try {
     let validId = await Reservation_Type.findOne({
-      where: { id: req.body.id },
+      where: { id: req.params.id },
     });
     if (!validId)
       return res
@@ -57,7 +57,7 @@ router.put("/update", verify, async (req, res) => {
         name: req.body.name,
         duration: req.body.duration,
       },
-      { where: { id: req.body.id } }
+      { where: { id: req.params.id } }
     );
     return res.json({ message: "Reservation type successfully updated!" });
   } catch (error) {

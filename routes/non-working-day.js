@@ -29,10 +29,10 @@ router.post("/create", verify, async (req, res) => {
   }
 });
 
-router.put("/update", verify, async (req, res) => {
+router.put("/:id", verify, async (req, res) => {
   try {
     let validId = await Non_Working_Day.findOne({
-      where: { id: req.body.id },
+      where: { id: req.params.id },
     });
     if (!validId)
       return res
@@ -43,7 +43,7 @@ router.put("/update", verify, async (req, res) => {
         date: req.body.date,
         reason: req.body.reason,
       },
-      { where: { id: req.body.id } }
+      { where: { id: req.params.id } }
     );
     return res.json({ message: "Non-Working day successfully updated!" });
   } catch (error) {
@@ -51,16 +51,16 @@ router.put("/update", verify, async (req, res) => {
   }
 });
 
-router.delete("/delete", verify, async (req, res) => {
+router.delete("/:id", verify, async (req, res) => {
   try {
     let validId = await Non_Working_Day.findOne({
-      where: { id: req.body.id },
+      where: { id: req.params.id },
     });
     if (!validId)
       return res
         .status(404)
         .json({ message: "There's no record with that id!" });
-    await Non_Working_Day.destroy({ where: { id: req.body.id } });
+    await Non_Working_Day.destroy({ where: { id: req.params.id } });
     return res.json({ message: "Non-Working day successfully deleted!" });
   } catch (error) {
     return res.status(400).json(error);
