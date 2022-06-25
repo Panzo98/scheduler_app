@@ -133,4 +133,13 @@ router.post("/create", async (req, res) => {
   }
 });
 
+router.get("/:id", async (req, res) => {
+  try {
+    let response = await Reservation.findByPk(req.params.id);
+    return res.json({ message: "Successful", data: response });
+  } catch (error) {
+    return res.status(500).json({ message: "Something went wrong!" });
+  }
+});
+
 module.exports = router;
