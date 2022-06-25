@@ -3,7 +3,9 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const db = require("../models");
 const User = db.User;
+const Company = db.Company;
 const jwt = require("jsonwebtoken");
+const verify = require("../middlewares/verify");
 require("dotenv/config");
 
 router.get("/all", async (req, res) => {
@@ -12,6 +14,28 @@ router.get("/all", async (req, res) => {
     return res.status(201).json({ message: "All users here!", data: response });
   } catch (error) {
     return res.json({ message: "Cannot get all users!" });
+  }
+});
+
+router.get("/check", verify, (req, res) => {
+  try {
+    let token = jwt.sign(
+      {
+        id: req.user.id,
+        username: req.user.username,
+        email: req.user.email,
+        role_id: req.user.role_id,
+        company_id: req.user.company_id,
+        Company: req.user.Company,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+    return res
+      .status(201)
+      .json({ message: "Check correct!", token, user: req.user });
+  } catch (error) {
+    return res.status(500).json({ message: "Check failed!" });
   }
 });
 
@@ -27,20 +51,9 @@ router.post("/register", async (req, res) => {
     user.password = undefined;
     user.createdAt = undefined;
     user.updatedAt = undefined;
-    let token = jwt.sign(
-      {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role_id: user.role_id,
-        company_id: user.company_id,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "24h" }
-    );
     return res
       .status(201)
-      .json({ message: "User successfully registered!", user, token });
+      .json({ message: "User successfully registered!", user });
   } catch (error) {
     console.log(error);
     return res
@@ -51,7 +64,10 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    const user = await User.findOne({ where: { username: req.body.username } });
+    const user = await User.findOne({
+      where: { username: req.body.username },
+      include: { model: Company },
+    });
     if (!user) {
       return res.status(400).json({ message: "Wrong username!" });
     }
@@ -68,13 +84,14 @@ router.post("/login", async (req, res) => {
         email: user.email,
         role_id: user.role_id,
         company_id: user.company_id,
+        Company: user.Company,
       },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
 
     return res.json({
-      jwt: token,
+      token,
       message: "Logged in successfully!",
       user,
     });
