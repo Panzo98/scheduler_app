@@ -20,6 +20,7 @@
   "homepage": "https://github.com/Panzo98/scheduler_app#readme",
   "description": "",
   "dependencies": {
+    "@socket.io/redis-adapter": "^7.2.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
@@ -27,7 +28,9 @@
     "jsonwebtoken": "^8.5.1",
     "mariadb": "^3.0.0",
     "mysql2": "^2.3.3",
-    "sequelize": "^6.20.1"
+    "redis": "^4.1.0",
+    "sequelize": "^6.20.1",
+    "socket.io": "^4.5.1"
   },
   "devDependencies": {
     "sequelize-cli": "^6.4.1"
