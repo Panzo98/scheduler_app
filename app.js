@@ -17,9 +17,9 @@ const objectRouter = require("./routes/objects");
 const daysRouter = require("./routes/days");
 const rolesRouter = require("./routes/roles");
 
-app.use("/api/reservation", reservationRouter);
-app.use("/api/user", userRouter);
-app.use("/api/reservation_type", reservationTypeRouter);
+app.use("/api/reservations", reservationRouter);
+app.use("/api/users", userRouter);
+app.use("/api/reservation_types", reservationTypeRouter);
 app.use("/api/non_working_days", nonWorkingDaysRouter);
 app.use("/api/working_hours", workingHoursRouter);
 app.use("/api/companies", companyRouter);
