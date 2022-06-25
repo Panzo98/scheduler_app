@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../models");
 const Object = db.Object;
+const Day = db.Day;
 const verify = require("../middlewares/verify");
 
 router.get("/all", async (req, res) => {
@@ -15,10 +16,26 @@ router.get("/all", async (req, res) => {
 
 router.post("/create", verify, async (req, res) => {
   try {
-    await Object.create({
+    let result = await Object.create({
       name: req.body.name,
       company_id: req.body.company_id,
     });
+    let days = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
+    days.forEach(singleDay => {
+      await Day.create({
+        name: singleDay,
+        working_day: false,
+        object_id: result.id
+      })
+    })
     return res.json({ message: "New Object created!" });
   } catch (error) {
     return res.status(400).json({ message: error });

@@ -9,12 +9,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Non_Working_Day.belongsTo(models.Object, {
+        foreignKey: "object_id",
+      });
     }
   }
   Non_Working_Day.init(
     {
       date: { type: DataTypes.DATEONLY, allowNull: false, unique: true },
       reason: { type: DataTypes.STRING, allowNull: false },
+      object_id: { type: DataTypes.INTEGER, allowNull: false },
     },
     {
       sequelize,

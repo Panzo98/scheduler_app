@@ -21,6 +21,12 @@ module.exports = (sequelize, DataTypes) => {
       Object.hasMany(models.Working_Hour, {
         foreignKey: "object_id",
       });
+      Object.hasMany(models.Day, {
+        foreignKey: "object_id",
+      });
+      Object.hasMany(models.Non_Working_Day, {
+        foreignKey: "object_id",
+      });
     }
   }
   Object.init(

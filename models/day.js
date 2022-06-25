@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Day.belongsTo(models.Object, {
+        foreignKey: "object_id",
+      });
       Day.hasMany(models.Working_Hour, {
         foreignKey: "day_id",
       });
@@ -18,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: { type: DataTypes.STRING, allowNull: false },
       working_day: { type: DataTypes.BOOLEAN, allowNull: false },
+      object_id: { type: DataTypes.INTEGER, allowNull: false },
     },
     {
       sequelize,
