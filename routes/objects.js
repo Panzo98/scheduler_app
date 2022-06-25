@@ -29,13 +29,13 @@ router.post("/create", verify, async (req, res) => {
       "Saturday",
       "Sunday",
     ];
-    days.forEach(singleDay => {
+    days.forEach(async (singleDay) => {
       await Day.create({
         name: singleDay,
         working_day: false,
-        object_id: result.id
-      })
-    })
+        object_id: result.id,
+      });
+    });
     return res.json({ message: "New Object created!" });
   } catch (error) {
     return res.status(400).json({ message: error });
