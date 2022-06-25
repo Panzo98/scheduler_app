@@ -12,6 +12,19 @@ router.get("/all", async (req, res) => {
   }
 });
 
+router.get("/getByObject/:id", async (req, res) => {
+  try {
+    let response = await Working_Hour.findAll({
+      where: {
+        object_id: req.params.id,
+      },
+    });
+    return res.json({ message: "Successful", data: response });
+  } catch (error) {
+    return res.status(500).json({ message: "Something went wrong!" });
+  }
+});
+
 router.post("/create", async (req, res) => {
   try {
     await Working_Hour.create({
@@ -28,7 +41,7 @@ router.post("/create", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     let response = await Working_Hour.findByPk(req.params.id);
-    return res.json({ message: "Successful", data: response });
+    return res.json({ message: "Sguccessful", data: response });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong!" });
   }

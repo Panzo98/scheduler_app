@@ -12,6 +12,19 @@ router.get("/all", async (req, res) => {
   }
 });
 
+router.get("/getByObject/:id", async (req, res) => {
+  try {
+    let response = await Day.findAll({
+      where: {
+        object_id: req.params.id,
+      },
+    });
+    return res.json({ message: "Successful", data: response });
+  } catch (error) {
+    return res.status(500).json({ message: "Something went wrong!" });
+  }
+});
+
 router.post("/create", async (req, res) => {
   try {
     await Day.create({
