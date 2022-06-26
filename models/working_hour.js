@@ -20,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
   Working_Hour.init(
     {
       day_id: { type: DataTypes.INTEGER, allowNull: false, unique: true },
-      start: { type: DataTypes.TIME, allowNull: false },
-      end: { type: DataTypes.TIME, allowNull: false },
+      start: { type: DataTypes.TIME },
+      end: { type: DataTypes.TIME },
       object_id: { type: DataTypes.INTEGER, allowNull: false },
     },
     {

@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require("../models");
 const Working_Hour = db.Working_Hour;
 const Object = db.Object;
+const Day = db.Day;
 
 router.get("/all", async (req, res) => {
   try {
@@ -19,9 +20,14 @@ router.get("/getByObject/:id", async (req, res) => {
       where: {
         object_id: req.params.id,
       },
-      include: {
-        model: Object,
-      },
+      include: [
+        {
+          model: Object,
+        },
+        {
+          model: Day,
+        },
+      ],
     });
     return res.json({ message: "Successful", data: response });
   } catch (error) {
