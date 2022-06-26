@@ -37,6 +37,7 @@ router.post("/create", verify, async (req, res) => {
     await Non_Working_Day.create({
       date: req.body.date,
       reason: req.body.reason,
+      object_id: req.body.object_id,
     });
     return res
       .status(200)
