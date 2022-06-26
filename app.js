@@ -49,7 +49,7 @@ Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
 io.use((socket, next) => {
   try {
     if (!socket.handshake.headers.authorization) {
-      next(new Error("Authentication error"));
+      return next(new Error("Authentication error"));
     }
     const verified = jwt.verify(
       socket.handshake.headers.authorization,

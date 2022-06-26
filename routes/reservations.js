@@ -1,4 +1,5 @@
 const express = require("express");
+const verify = require("../middlewares/verify");
 const router = express.Router();
 const db = require("../models");
 const Reservation = db.Reservation;
@@ -6,6 +7,7 @@ const Day = db.Day;
 const Non_Working_Day = db.Non_Working_Day;
 const Reservation_Type = db.Reservation_Type;
 const Working_Hour = db.Working_Hour;
+const Object = db.Object;
 
 router.get("/all", async (req, res) => {
   try {
@@ -22,6 +24,48 @@ router.get("/getByObject/:id", async (req, res) => {
       where: {
         object_id: req.params.id,
       },
+      include: [{ model: Object }, { model: Reservation_Type }],
+    });
+    return res.json({ message: "Successful", data: response });
+  } catch (error) {
+    return res.status(500).json({ message: "Something went wrong!" });
+  }
+});
+
+router.get("/getByCompany/:id", async (req, res) => {
+  try {
+    let response = await Reservation.findAll({
+      include: [
+        {
+          model: Object,
+          where: {
+            company_id: req.params.id,
+          },
+        },
+        { model: Reservation_Type },
+      ],
+    });
+    return res.json({ message: "Successful", data: response });
+  } catch (error) {
+    return res.status(500).json({ message: "Something went wrong!" });
+  }
+});
+
+router.get("/getPendingByCompany", verify, async (req, res) => {
+  try {
+    let response = await Reservation.findAll({
+      where: {
+        status: "pending",
+      },
+      include: [
+        {
+          model: Object,
+          where: {
+            company_id: req.user.company_id,
+          },
+        },
+        { model: Reservation_Type },
+      ],
     });
     return res.json({ message: "Successful", data: response });
   } catch (error) {
@@ -149,6 +193,9 @@ router.post("/create", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     let response = await Reservation.findByPk(req.params.id);
+    if (!response) {
+      return res.status(500).json({ message: "No records with this id!" });
+    }
     return res.json({ message: "Successful", data: response });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong!" });
