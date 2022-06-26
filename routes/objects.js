@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require("../models");
 const Object = db.Object;
 const Day = db.Day;
+const Working_Hour = db.Working_Hour;
 const verify = require("../middlewares/verify");
 
 router.get("/all", async (req, res) => {
@@ -46,9 +47,13 @@ router.post("/create", verify, async (req, res) => {
       "Sunday",
     ];
     days.forEach(async (singleDay) => {
-      await Day.create({
+      let createdDay = await Day.create({
         name: singleDay,
         working_day: false,
+        object_id: result.id,
+      });
+      await Working_Hour.create({
+        day_id: createdDay.id,
         object_id: result.id,
       });
     });
