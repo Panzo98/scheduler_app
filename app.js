@@ -64,7 +64,7 @@ io.use((socket, next) => {
 });
 
 io.on("connection", (socket) => {
-  socket.join(socket.company_id);
+  socket.join(`${socket.company_id}`);
   console.log(socket.id);
   console.log(socket.user);
 });
