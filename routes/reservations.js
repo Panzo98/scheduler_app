@@ -202,4 +202,26 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.put("/decline/:id", async (req, res) => {
+  try {
+    let validId = await Reservation.findOne({
+      where: { id: req.params.id },
+    });
+    if (!validId)
+      return res
+        .status(404)
+        .json({ message: "There's no record with that id!" });
+
+    await Reservation.update(
+      {
+        status: "declined",
+      },
+      { where: { id: req.params.id } }
+    );
+    return res.json({ message: "Reservation declined!" });
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+});
+
 module.exports = router;
