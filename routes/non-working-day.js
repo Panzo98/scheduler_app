@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require("../models");
 const verify = require("../middlewares/verify");
 const Non_Working_Day = db.Non_Working_Day;
+const Object = db.Object;
 
 router.get("/all", verify, async (req, res) => {
   try {
@@ -20,6 +21,9 @@ router.get("/getByObject/:id", async (req, res) => {
     let response = await Non_Working_Day.findAll({
       where: {
         object_id: req.params.id,
+      },
+      include: {
+        model: Object,
       },
     });
     return res.json({ message: "Successful", data: response });

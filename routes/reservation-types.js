@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../models");
 const Reservation_Type = db.Reservation_Type;
+const Object = db.Object;
 const verify = require("../middlewares/verify");
 
 router.get("/all", async (req, res) => {
@@ -18,6 +19,9 @@ router.get("/getByObject/:id", async (req, res) => {
     let response = await Reservation_Type.findAll({
       where: {
         object_id: req.params.id,
+      },
+      include: {
+        model: Object,
       },
     });
     return res.json({ message: "Successful", data: response });

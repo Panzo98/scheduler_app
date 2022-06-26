@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../models");
 const Working_Hour = db.Working_Hour;
+const Object = db.Object;
 
 router.get("/all", async (req, res) => {
   try {
@@ -17,6 +18,9 @@ router.get("/getByObject/:id", async (req, res) => {
     let response = await Working_Hour.findAll({
       where: {
         object_id: req.params.id,
+      },
+      include: {
+        model: Object,
       },
     });
     return res.json({ message: "Successful", data: response });
