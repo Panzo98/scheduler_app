@@ -37,12 +37,15 @@ router.get("/getByObject/:id", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   try {
-    await Working_Hour.create({
+    let response = await Working_Hour.create({
       day_id: req.body.day_id,
       start: req.body.start,
       end: req.body.end,
     });
-    return res.json({ message: "Successfully added working hour!" });
+    return res.json({
+      message: "Successfully added working hour!",
+      data: response,
+    });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong!" });
   }

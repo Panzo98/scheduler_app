@@ -34,14 +34,17 @@ router.get("/getByObject/:id", async (req, res) => {
 
 router.post("/create", verify, async (req, res) => {
   try {
-    await Non_Working_Day.create({
+    let response = await Non_Working_Day.create({
       date: req.body.date,
       reason: req.body.reason,
       object_id: req.body.object_id,
     });
     return res
       .status(200)
-      .json({ message: "Non-Working day successfully created!" });
+      .json({
+        message: "Non-Working day successfully created!",
+        data: response,
+      });
   } catch (error) {
     return res.status(400).json({ message: "Something went wrong!", error });
   }

@@ -57,7 +57,7 @@ router.post("/create", verify, async (req, res) => {
         object_id: result.id,
       });
     });
-    return res.json({ message: "New Object created!" });
+    return res.json({ message: "New Object created!", data: result });
   } catch (error) {
     return res.status(400).json({ message: error });
   }

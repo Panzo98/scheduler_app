@@ -14,11 +14,11 @@ router.get("/all", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   try {
-    await Role.create({
+    let response = await Role.create({
       name: req.body.name,
       level: req.body.level,
     });
-    return res.json({ message: "Successfully added role!" });
+    return res.json({ message: "Successfully added role!", data: response });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong!" });
   }

@@ -31,12 +31,12 @@ router.get("/getByObject/:id", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   try {
-    await Day.create({
+    let response = await Day.create({
       name: req.body.name,
       working_day: req.body.working_day,
       object_id: req.body.object_id,
     });
-    return res.json({ message: "Successfully added day!" });
+    return res.json({ message: "Successfully added day!", data: response });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong!" });
   }

@@ -32,13 +32,16 @@ router.get("/getByObject/:id", async (req, res) => {
 
 router.post("/create", verify, async (req, res) => {
   try {
-    await Reservation_Type.create({
+    let response = await Reservation_Type.create({
       name: req.body.name,
       duration: req.body.duration,
       color: req.body.color,
       object_id: req.body.object_id,
     });
-    return res.json({ message: "New reservation type created!" });
+    return res.json({
+      message: "New reservation type created!",
+      data: response,
+    });
   } catch (error) {
     return res.status(400).json({ message: error });
   }

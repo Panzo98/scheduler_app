@@ -14,11 +14,11 @@ router.get("/all", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   try {
-    await Company.create({
+    let response = await Company.create({
       name: req.body.name,
       address: req.body.address,
     });
-    return res.json({ message: "Successfully added company!" });
+    return res.json({ message: "Successfully added company!", data: response });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong!" });
   }
