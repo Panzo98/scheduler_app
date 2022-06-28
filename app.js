@@ -14,7 +14,6 @@ const nonWorkingDaysRouter = require("./routes/non-working-day");
 const workingHoursRouter = require("./routes/working-hours");
 const companyRouter = require("./routes/companies");
 const objectRouter = require("./routes/objects");
-const daysRouter = require("./routes/days");
 const rolesRouter = require("./routes/roles");
 
 app.use("/api/reservations", reservationRouter);
@@ -24,7 +23,6 @@ app.use("/api/non_working_days", nonWorkingDaysRouter);
 app.use("/api/working_hours", workingHoursRouter);
 app.use("/api/companies", companyRouter);
 app.use("/api/objects", objectRouter);
-app.use("/api/days", daysRouter);
 app.use("/api/roles", rolesRouter);
 
 const { Server } = require("socket.io");

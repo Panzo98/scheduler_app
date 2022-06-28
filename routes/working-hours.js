@@ -3,7 +3,6 @@ const router = express.Router();
 const db = require("../models");
 const Working_Hour = db.Working_Hour;
 const Object = db.Object;
-const Day = db.Day;
 
 router.get("/all", async (req, res) => {
   try {
@@ -24,9 +23,6 @@ router.get("/getByObject/:id", async (req, res) => {
         {
           model: Object,
         },
-        {
-          model: Day,
-        },
       ],
     });
     return res.json({ message: "Successful", data: response });
@@ -38,7 +34,8 @@ router.get("/getByObject/:id", async (req, res) => {
 router.post("/create", async (req, res) => {
   try {
     let response = await Working_Hour.create({
-      day_id: req.body.day_id,
+      day_name: req.body.day_name,
+      working_day: req.body.working_day,
       start: req.body.start,
       end: req.body.end,
     });
@@ -92,6 +89,8 @@ router.put("/:id", async (req, res) => {
 
     await Working_Hour.update(
       {
+        day_name: req.body.day_name,
+        working_day: req.body.working_day,
         start: req.body.start,
         end: req.body.end,
       },

@@ -8,16 +8,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      day_id: {
-        type: Sequelize.INTEGER,
+      day_name: {
+        type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
-        references: {
-          model: "Days",
-          key: "id",
-        },
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
+      },
+      working_day: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
       },
       start: {
         type: Sequelize.TIME,
