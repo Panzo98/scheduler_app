@@ -34,6 +34,7 @@ router.post("/create", verify, async (req, res) => {
   try {
     let result = await Object.create({
       name: req.body.name,
+      address: req.body.address,
       company_id: req.user.company_id,
     });
     let days = [
@@ -97,6 +98,7 @@ router.put("/:id", verify, async (req, res) => {
     await Object.update(
       {
         name: req.body.name,
+        address: req.body.address,
         company_id: req.user.company_id,
       },
       { where: { id: req.params.id } }

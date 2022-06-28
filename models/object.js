@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
   Object.init(
     {
       name: { type: DataTypes.STRING, allowNull: false },
+      address: { type: DataTypes.STRING, allowNull: false },
       company_id: { type: DataTypes.INTEGER, allowNull: false },
     },
     {
