@@ -24,6 +24,9 @@ module.exports = (sequelize, DataTypes) => {
       Object.hasMany(models.Non_Working_Day, {
         foreignKey: "object_id",
       });
+      Object.hasMany(models.Object_Contact, {
+        foreignKey: "object_id",
+      });
     }
   }
   Object.init(
