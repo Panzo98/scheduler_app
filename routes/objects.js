@@ -37,6 +37,10 @@ router.get("/getByCompany/:id", async (req, res) => {
         response = [...response, elem];
       })
     );
+    response.sort(
+      (a, b) =>
+        a.dataValues.createdAt.getTime() - b.dataValues.createdAt.getTime()
+    );
     return res.json({ message: "Successful", data: response });
   } catch (error) {
     console.log(error);
@@ -60,7 +64,7 @@ router.post("/create", verify, async (req, res) => {
       "Saturday",
       "Sunday",
     ];
-    days.forEach(async (singleDay) => {
+    days.map(async (singleDay) => {
       await Working_Hour.create({
         day_name: singleDay,
         working_day: false,
