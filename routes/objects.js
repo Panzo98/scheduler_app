@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require("../models");
 const Object = db.Object;
 const Working_Hour = db.Working_Hour;
+const Object_Contact = db.Object_Contact;
 const verify = require("../middlewares/verify");
 
 router.get("/all", async (req, res) => {
@@ -24,6 +25,12 @@ router.get("/getByCompany/:id", async (req, res) => {
         company_id: req.params.id,
       },
     });
+    let contacts = await Object_Contact.findAll({
+      where: {
+        object_id: response.id,
+      },
+    });
+    response.contacts = contacts;
     return res.json({ message: "Successful", data: response });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong!" });
@@ -50,6 +57,12 @@ router.post("/create", verify, async (req, res) => {
       await Working_Hour.create({
         day_name: singleDay,
         working_day: false,
+        object_id: result.id,
+      });
+    });
+    req.body.contacts.forEach(async (elem) => {
+      await Object_Contact.create({
+        value: elem,
         object_id: result.id,
       });
     });
@@ -103,6 +116,13 @@ router.put("/:id", verify, async (req, res) => {
       },
       { where: { id: req.params.id } }
     );
+    await Object_Contact.destroy({ where: { object_id: req.params.id } });
+    req.body.contacts.forEach(async (elem) => {
+      await Object_Contact.create({
+        value: elem,
+        object_id: req.params.id,
+      });
+    });
     return res.json({ message: "Object successfully updated!" });
   } catch (error) {
     return res.status(400).json(error);
