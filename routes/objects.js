@@ -20,19 +20,26 @@ router.get("/all", async (req, res) => {
 
 router.get("/getByCompany/:id", async (req, res) => {
   try {
-    let response = await Object.findAll({
+    let data = await Object.findAll({
       where: {
         company_id: req.params.id,
       },
     });
-    let contacts = await Object_Contact.findAll({
-      where: {
-        object_id: response.id,
-      },
-    });
-    response.contacts = contacts;
+    let response = [];
+    await Promise.all(
+      data.map(async (elem) => {
+        let contacts = await Object_Contact.findAll({
+          where: {
+            object_id: elem.id,
+          },
+        });
+        elem.dataValues.contacts = contacts;
+        response = [...response, elem];
+      })
+    );
     return res.json({ message: "Successful", data: response });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: "Something went wrong!" });
   }
 });
