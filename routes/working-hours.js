@@ -25,7 +25,21 @@ router.get("/getByObject/:id", async (req, res) => {
         },
       ],
     });
-    return res.json({ message: "Successful", data: response });
+    let days = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
+    const sortedResponse = response.sort(
+      (a, b) =>
+        days.indexOf(a.dataValues.day_name) -
+        days.indexOf(b.dataValues.day_name)
+    );
+    return res.json({ message: "Successful", data: sortedResponse });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong!" });
   }
