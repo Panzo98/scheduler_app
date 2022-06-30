@@ -127,15 +127,28 @@ router.put("/:id", verify, async (req, res) => {
       },
       { where: { id: req.params.id } }
     );
-    await Object_Contact.destroy({ where: { object_id: req.params.id } });
-    req.body.contacts.forEach(async (elem) => {
-      await Object_Contact.create({
-        value: elem,
-        object_id: req.params.id,
-      });
+    let response = await Object.findOne({
+      where: { id: req.params.id },
     });
-    return res.json({ message: "Object successfully updated!" });
+    await Object_Contact.destroy({ where: { object_id: req.params.id } });
+    await Promise.all(
+      req.body.contacts.map(async (elem) => {
+        return await Object_Contact.create({
+          value: elem,
+          object_id: req.params.id,
+        });
+      })
+    );
+    let contacts = await Object_Contact.findAll({
+      where: { object_id: req.params.id },
+    });
+    response.dataValues.contacts = contacts;
+    return res.json({
+      message: "Object successfully updated!",
+      data: response,
+    });
   } catch (error) {
+    console.log(error);
     return res.status(400).json(error);
   }
 });
