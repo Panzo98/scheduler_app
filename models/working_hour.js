@@ -25,6 +25,13 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Working_Hour",
+      validate: {
+        bothStartAndEndOrNone() {
+          if ((this.start === null) !== (this.end === null)) {
+            throw new Error("Either both start and end, or neither!");
+          }
+        },
+      },
     }
   );
   return Working_Hour;
