@@ -33,7 +33,27 @@ router.get("/getByCompany/:id", async (req, res) => {
             object_id: elem.id,
           },
         });
+        let workingHours = await Working_Hour.findAll({
+          where: {
+            object_id: elem.id,
+          },
+        });
         elem.dataValues.contacts = contacts;
+        let days = [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday",
+        ];
+        const sortedWorkingHours = workingHours.sort(
+          (a, b) =>
+            days.indexOf(a.dataValues.day_name) -
+            days.indexOf(b.dataValues.day_name)
+        );
+        elem.dataValues.workingHours = sortedWorkingHours;
         response = [...response, elem];
       })
     );
