@@ -1,5 +1,6 @@
 const express = require("express");
 const verify = require("../middlewares/verify");
+const validateReservation = require("../middlewares/validateReservation");
 const router = express.Router();
 const db = require("../models");
 const Reservation = db.Reservation;
@@ -169,6 +170,10 @@ router.post("/create", async (req, res) => {
   //   console.log(error);
   //   return res.status(500).json({ message: "Something went wrong!", error });
   // }
+});
+
+router.post("/validate", validateReservation, (req, res) => {
+  res.json({ message: "All good!" });
 });
 
 router.get("/:id", async (req, res) => {
