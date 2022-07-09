@@ -1,4 +1,5 @@
 const db = require("../models");
+const { Op } = require("sequelize");
 const moment = require("moment");
 const Reservation = db.Reservation;
 const Non_Working_Day = db.Non_Working_Day;
@@ -8,8 +9,6 @@ const Object = db.Object;
 
 const validateReservation = async (req, res, next) => {
   let date = new Date(req.body.date);
-  console.log(date);
-  console.log("a");
   let dayId = date.getDay();
   // Check if date is in the past
   let diff = new Date().getTime() - date.getTime();
@@ -26,7 +25,6 @@ const validateReservation = async (req, res, next) => {
     return res.status(500).json({ message: "No reservation of this type!" });
   }
   const object_id = reservationType.dataValues.object_id;
-  console.log(object_id);
   // Duration on reservation converting to minutes
   let durationInMinutes =
     parseInt(reservationType.duration) * 60 +
@@ -56,7 +54,7 @@ const validateReservation = async (req, res, next) => {
   }
   //-----------------------------------
   //  Checking if day is on special day off
-  const isValidDay = true;
+  let isValidDay = true;
   let specialNonWorkingDays = await Non_Working_Day.findAll({
     where: { object_id: object_id },
   });
@@ -69,6 +67,7 @@ const validateReservation = async (req, res, next) => {
     return res.status(500).json({ message: "Special Non working day!" });
   //-----------------------------------
   // Checking if ordering time is in working hours
+  // TODO adapt working hours to timezones (every object should have timezone tied to it and actual start/end time for that timezone will be compared)
   if (!workingHours)
     return res.status(500).json({ message: "No working hours added!" });
   let orderingTimeInMinutes = date.getUTCHours() * 60 + date.getMinutes();
@@ -88,30 +87,76 @@ const validateReservation = async (req, res, next) => {
       .json({ message: "Your order is out of working hours!" });
   //-----------------------------------
   // Checking da l' ce poklapa vrijeme sa nekom prethodnom rezervacijom hahahaah
-  let thisDay =
-    date.getFullYear() +
-    "-" +
-    (date.getMonth() + 1 < 10
-      ? "0" + eval(date.getMonth() + 1)
-      : date.getMonth() + 1) +
-    "-" +
-    (date.getDate() < 10 ? "0" + eval(date.getDate()) : date.getDate());
   let allReservationOnThatDay = await Reservation.findAll({
     where: {
-      date: thisDay,
+      date: date,
       object_id: object_id,
       // TODO uncheck this
       //  status: "accepted"
     },
   });
+  let recievedReservationEnd = moment(date)
+    .add(reservationType.duration, "m")
+    .toDate();
   allReservationOnThatDay.forEach((elem) => {
     let reservationStart = new Date(elem.dataValues.date);
     let reservationEnd = moment(reservationStart)
       .add(reservationType.duration, "m")
       .toDate();
-    console.log(reservationStart);
-    console.log(reservationEnd);
-    if (date >= reservationStart && date < reservationEnd) {
+
+    //SEE reference/period-relations.png
+    // Start Inside
+    if (date > reservationStart && date < reservationEnd) {
+      isValidDay = false;
+    }
+    // Inside Start Touching
+    if (
+      date.getTime() == reservationStart.getTime() &&
+      recievedReservationEnd < reservationEnd
+    ) {
+      isValidDay = false;
+    }
+    // Enclosing Start Touching
+    if (
+      date.getTime() == reservationStart.getTime() &&
+      recievedReservationEnd > reservationEnd
+    ) {
+      isValidDay = false;
+    }
+    // Enclosing
+    if (date < reservationStart && recievedReservationEnd > reservationEnd) {
+      isValidDay = false;
+    }
+    // Enclosing End Touching
+    if (
+      date < reservationStart &&
+      recievedReservationEnd.getTime() == reservationEnd.getTime()
+    ) {
+      isValidDay = false;
+    }
+    // Exact Match
+    if (
+      date.getTime() == reservationStart.getTime() &&
+      recievedReservationEnd.getTime() == reservationEnd.getTime()
+    ) {
+      isValidDay = false;
+    }
+    // Inside
+    if (date > reservationStart && recievedReservationEnd < reservationEnd) {
+      isValidDay = false;
+    }
+    // Inside End Touching
+    if (
+      date > reservationStart &&
+      recievedReservationEnd.getTime() == reservationEnd.getTime()
+    ) {
+      isValidDay = false;
+    }
+    // End Inside
+    if (
+      recievedReservationEnd > reservationStart &&
+      recievedReservationEnd < reservationEnd
+    ) {
       isValidDay = false;
     }
   });
@@ -119,7 +164,6 @@ const validateReservation = async (req, res, next) => {
     return res
       .status(500)
       .json({ message: "Reservation overlaps with another reservation!" });
-  //   console.log(allReservationOnThatDay);
   //-----------------------------------
   // await Reservation.create({
   //   name: req.body.name,
